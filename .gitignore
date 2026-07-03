@@ -1,0 +1,19 @@
+# Cache directory (when using project-local DENO_DIR)
+.deno/
+
+# Deno compile executables
+bin/
+dist/
+
+# Coverage reports
+coverage/
+*.lcov
+
+# Environment variables
+.env
+.env.local
+
+# IDE and System Files
+.DS_Store
+.vscode/
+.idea/

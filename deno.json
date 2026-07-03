@@ -1,0 +1,12 @@
+{
+  "tasks": {
+    "dev": "deno run --watch --allow-net --env main.ts",
+    "start": "deno run --allow-net --allow-env main.ts"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1",
+    "express": "npm:express@^5.2.1",
+    "mongoose": "npm:mongoose@^9.7.3",
+    "morgan": "npm:morgan@^1.11.0"
+  }
+}
