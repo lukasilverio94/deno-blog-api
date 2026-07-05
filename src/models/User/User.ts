@@ -2,10 +2,10 @@ import { IUser } from "./IUser.ts";
 import mongoose, { Schema } from "npm:mongoose@latest";
 
 export class User implements IUser {
-    username: IUser["username"]
-    bio: IUser["bio"]
-    avatar: IUser["avatar"]
-    password: IUser["password"]
+    username: IUser["username"];
+    bio: IUser["bio"];
+    avatar: IUser["avatar"];
+    password: IUser["password"];
 
     constructor(user: IUser) {
         this.username = user.username;
@@ -18,20 +18,47 @@ export class User implements IUser {
 const userSchema = new Schema<IUser>({
     username: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
+        minlength: 3,
+        maxlength: 30,
+        match: /^[a-zA-Z0-9_]+$/,
     },
     bio: {
         type: String,
-        required: false
+        required: false,
+        default: null,
+        trim: true,
+        maxlength: 160,
     },
     avatar: {
         type: String,
-        required: false
+        required: false,
+        default: null,
+        trim: true,
+        maxlength: 300,
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        minlength: 4,
+        maxlength: 128,
+        select: false,
     }
+}, {
+    timestamps: true,
+    toJSON: {
+        transform: (_doc, ret) => {
+            const user = ret as Record<string, unknown>;
+
+            delete user.password;
+            delete user.__v;
+
+            return ret;
+        },
+    },
 });
+
+userSchema.loadClass(User);
 
 export const UserModel = mongoose.model<IUser>('User', userSchema);

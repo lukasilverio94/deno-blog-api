@@ -7,24 +7,23 @@ export class BaseRepository<T> {
     this.model = model;
   }
 
-  async create(data: Partial<T>): Promise<T> {
-    return await this.model.create(data);
+  create(data: Partial<T>){
+    return this.model.create(data);
   }
 
-  async findById(id: string | Types.ObjectId ): Promise<T | null> {
-    return await this.model.findById(id).exec();
+  findById(id: string | Types.ObjectId) {
+    return this.model.findById(id);
   }
 
-  async findAll(): Promise<T[]> {
-    return await this.model.find().exec();
+  findAll(){
+    return this.model.find();
   }
 
-  async update(id: string | Types.ObjectId, item: Partial<T>): Promise<T | null> {
-    return await this.model.findByIdAndUpdate(id, item, { new: true }).exec();
+  update(id: string | Types.ObjectId, item: Partial<T>){
+    return this.model.findByIdAndUpdate(id, item, { new: true });
   }
 
-  async delete(id: string | Types.ObjectId): Promise<boolean> {
-    const result = await this.model.findByIdAndDelete(id).exec();
-    return result !== null;
+  delete(id: string | Types.ObjectId) {
+    return this.model.findByIdAndDelete(id);
   }
 }
