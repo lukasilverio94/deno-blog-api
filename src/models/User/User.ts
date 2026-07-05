@@ -22,7 +22,6 @@ const userSchema = new Schema<IUser>({
         trim: true,
         minlength: 3,
         maxlength: 30,
-        match: /^[a-zA-Z0-9_]+$/,
     },
     bio: {
         type: String,
@@ -47,16 +46,6 @@ const userSchema = new Schema<IUser>({
     }
 }, {
     timestamps: true,
-    toJSON: {
-        transform: (_doc, ret) => {
-            const user = ret as Record<string, unknown>;
-
-            delete user.password;
-            delete user.__v;
-
-            return ret;
-        },
-    },
 });
 
 userSchema.loadClass(User);
