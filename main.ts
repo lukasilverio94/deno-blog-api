@@ -5,6 +5,7 @@ import morgan from "npm:morgan";
 import { connectMongoDB } from "./src/config/db.ts";
 import { UserRouter } from "./src/routes/UserRoutes.ts";
 import responser from "responser";
+import { PostsRouter } from "./src/routes/PostsRoutes.ts";
 
 const app = express();
 const PORT = Number(Deno.env.get("PORT")) || 3000;
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(responser.default);
 
 app.use(UserRouter);
+app.use(PostsRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

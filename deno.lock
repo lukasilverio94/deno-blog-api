@@ -4,6 +4,7 @@
     "jsr:@std/assert@1": "1.0.19",
     "jsr:@std/dotenv@*": "0.225.7",
     "jsr:@std/internal@^1.0.12": "1.0.14",
+    "jsr:@zarco/isness@~0.1.18": "0.1.18",
     "npm:@types/express@*": "5.0.6",
     "npm:bcrypt@*": "6.0.0",
     "npm:bcrypt@6": "6.0.0",
@@ -14,6 +15,7 @@
     "npm:mongoose@latest": "9.7.3",
     "npm:morgan@*": "1.11.0",
     "npm:morgan@^1.11.0": "1.11.0",
+    "npm:request-check@1.6.2": "1.6.2",
     "npm:responser@*": "2.5.6",
     "npm:responser@^2.0.2": "2.5.6",
     "npm:throwlhos@1.1.0": "1.1.0"
@@ -30,6 +32,9 @@
     },
     "@std/internal@1.0.14": {
       "integrity": "291516b3d4c35024d6ffbc0a9df5bf4c64116e05b50012cf846710152d2ffdf7"
+    },
+    "@zarco/isness@0.1.18": {
+      "integrity": "a46146d9fabe67d0a273ed3d938788dc9e3bcf6c6f8e8a0dd380d9e431a74343"
     }
   },
   "npm": {
@@ -632,6 +637,9 @@
         "unpipe"
       ]
     },
+    "request-check@1.6.2": {
+      "integrity": "sha512-ps2RkFntTI5mT1iQR0KLP2M/ptyiyw4Z6pVfai9uHfQlIxa0NA3MBiNCaQ8+/mK/n3ZOZ1lLfMbLHqjxsDA9Mg=="
+    },
     "responser@2.5.6": {
       "integrity": "sha512-CAf7EE9rty9yIzIcIj7Ukcq9nR+Uj3pFXcDESB1etwIa9S1FdNXhECepmShdbFwlJ8lsX7MDjvvredesGwhMJQ==",
       "dependencies": [
@@ -822,10 +830,12 @@
   "workspace": {
     "dependencies": [
       "jsr:@std/assert@1",
+      "jsr:@zarco/isness@~0.1.18",
       "npm:bcrypt@6",
       "npm:express@^5.2.1",
       "npm:mongoose@^9.7.3",
       "npm:morgan@^1.11.0",
+      "npm:request-check@1.6.2",
       "npm:responser@^2.0.2",
       "npm:throwlhos@1.1.0"
     ]
