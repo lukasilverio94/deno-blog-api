@@ -1,7 +1,7 @@
 // @deno-types='npm:@types/express'
-import express, { Request, Response } from 'npm:express'
+import express, { Request, Response } from 'npm:express';
 import { connectMongoDB } from "./src/config/db.ts";
-import { UserRouter } from "./src/routes/userRoute.ts";
+import { UserRouter } from "./src/routes/userRoutes.ts";
 
 const app = express();
 const PORT = Number(Deno.env.get("PORT")) || 3000;

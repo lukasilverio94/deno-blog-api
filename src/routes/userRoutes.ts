@@ -8,6 +8,6 @@ const UserRouter = Router();
 const userRepository = new UserRepository();
 const userController = new UserController(userRepository);
 
-UserRouter.post('/users', userController.createUser);
+UserRouter.post('/api/users', userController.createUser);
 
 export { UserRouter };
