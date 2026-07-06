@@ -1,6 +1,6 @@
 
 import { UserRepository } from '../models/User/UserRepository.ts';
-import { UserController } from '../controllers/User/UserController.ts';
+import { UserController } from '../controllers/UserController.ts';
 import { Router } from 'npm:express';
 
 const UserRouter = Router();
