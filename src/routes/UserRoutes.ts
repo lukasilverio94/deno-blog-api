@@ -8,6 +8,8 @@ const UserRouter = Router();
 const userRepository = new UserRepository();
 const userController = new UserController(userRepository);
 
-UserRouter.post('/api/users', userController.createUser);
+UserRouter.post('/api/users', userController.create);
+UserRouter.get('/api/users', userController.findAll);
+UserRouter.get('/api/users/:id', userController.findById);
 
 export { UserRouter };

@@ -22,6 +22,7 @@ const userSchema = new Schema<IUser>({
         trim: true,
         minlength: 3,
         maxlength: 30,
+        unique: true
     },
     bio: {
         type: String,

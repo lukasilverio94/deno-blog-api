@@ -42,7 +42,9 @@ const postSchema = new Schema({
     },
     tags: {
         type: [String],
-        maxLength: [20, 'Each tag cannot exceed 20 characters']
+        maxLength: [20, 'Each tag cannot exceed 20 characters'],
+        required: false,
+        default: null
     },
     comments: [{
         type: Schema.Types.ObjectId,

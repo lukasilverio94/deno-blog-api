@@ -1,4 +1,4 @@
-import { Model, Types} from "mongoose";
+import { Model, Types, QueryFilter, QueryOptions} from "mongoose";
 
 export class BaseRepository<T> {
   protected model: Model<T>;
@@ -15,12 +15,17 @@ export class BaseRepository<T> {
     return this.model.findById(id);
   }
 
+  findOne(query: QueryFilter<T>, options?: QueryOptions) {
+    const findOne = this.model.findOne(query, options)
+    return findOne;
+  }
+
   findAll(){
     return this.model.find();
   }
 
   update(id: string | Types.ObjectId, item: Partial<T>){
-    return this.model.findByIdAndUpdate(id, item, { new: true });
+    return this.model.findByIdAndUpdate(id, item, { returnDocument: "after", runValidators: true});
   }
 
   delete(id: string | Types.ObjectId) {
