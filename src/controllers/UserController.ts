@@ -1,13 +1,12 @@
 import { signToken } from './../utils/AuthUtil.ts';
 import { NextFunction } from 'express';
-import bcrypt from 'npm:bcrypt';
+import bcrypt from 'bcrypt';
 import { UserRepository } from "../models/User/UserRepository.ts";
-import { Request, Response } from 'npm:express';
+import { Request, Response } from 'express';
 import { UserRules } from "../validation/UseRules.ts";
 
 export class UserController {
 
-    
     constructor(private readonly userRepository: UserRepository, private readonly rules = new UserRules()){
         this.rules = rules;
     }
@@ -39,7 +38,7 @@ export class UserController {
 
     findAll = async(_req: Request, res: Response, next: NextFunction) => {
         try {
-            const users = await this.userRepository.findAll();
+            const users = await this.userRepository.findAll().select("-password");
             return res.send_ok('', { users });
         } catch (error) {
             next(error);
@@ -52,7 +51,7 @@ export class UserController {
             this.rules.validate(
                 {_id: id}
             )
-            const user = await this.userRepository.findById(id);
+            const user = await this.userRepository.findById(id).select("-password");
             return res.send_ok('', { user });
         } catch (error) {
             next(error);
@@ -69,7 +68,10 @@ export class UserController {
             }
 
             const user = await this.userRepository.update(id, data);
-            return res.send_ok('User updated successfully', { user });
+            if (!user) {
+                return res.send_notFound("User not found")
+            }
+            return res.send_noContent("User updated successfully", { userId: user._id});
         } catch (error) {
             next(error);
         }

@@ -1,7 +1,7 @@
 // @deno-types='npm:@types/express'
-import express from "npm:express";
+import express from "express";
 // @deno-types='npm:@types/morgan'
-import morgan from "npm:morgan";
+import morgan from "morgan";
 import { connectMongoDB } from "./src/config/db.ts";
 import { UserRouter } from "./src/routes/UserRoutes.ts";
 import responser from "responser";

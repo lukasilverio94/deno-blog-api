@@ -1,4 +1,4 @@
-import  bcrypt from "npm:bcrypt";
+import  bcrypt from "bcrypt";
 import { signToken } from "./../utils/AuthUtil.ts";
 import { Request, Response, NextFunction } from "express";
 import { UserRepository } from "../models/User/UserRepository.ts";

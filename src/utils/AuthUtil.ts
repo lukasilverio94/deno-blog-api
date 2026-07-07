@@ -1,4 +1,5 @@
-import { JWTPayload } from 'npm:jose@5.9.6';
+// deno-lint-ignore-file
+import { JWTPayload } from "npm:jose";
 import jwt from "jsonwebtoken";
 import { throwlhos } from "../globals/Throwlhos.ts";
 
