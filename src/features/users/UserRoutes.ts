@@ -1,7 +1,7 @@
-import { UserRepository } from '../models/User/UserRepository.ts';
-import { UserController } from '../controllers/UserController.ts';
-import { Router } from 'npm:express';
-import { isAuthenticated } from "../middlewares/AuthMiddleware.ts";
+import { UserRepository } from '../../models/User/UserRepository.ts';
+import { UserController } from './UserController.ts';
+import { Router } from 'express';
+import { isAuthenticated } from "../../middlewares/AuthMiddleware.ts";
 
 const UserRouter = Router();
 

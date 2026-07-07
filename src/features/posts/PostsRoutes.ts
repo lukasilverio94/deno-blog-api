@@ -1,6 +1,6 @@
-import { isAuthenticated } from "../middlewares/AuthMiddleware.ts";
-import { PostController } from './../controllers/PostController.ts';
-import { PostRepository } from './../models/Post/PostRepository.ts';
+import { isAuthenticated } from "../../middlewares/AuthMiddleware.ts";
+import { PostController } from './PostController.ts';
+import { PostRepository } from '../../models/Post/PostRepository.ts';
 
 import { Router } from 'express';
 

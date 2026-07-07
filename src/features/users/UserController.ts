@@ -1,9 +1,9 @@
-import { signToken } from './../utils/AuthUtil.ts';
+import { signToken } from '../../utils/AuthUtil.ts';
 import { NextFunction } from 'express';
 import bcrypt from 'bcrypt';
-import { UserRepository } from "../models/User/UserRepository.ts";
+import { UserRepository } from "../../models/User/UserRepository.ts";
 import { Request, Response } from 'express';
-import { UserRules } from "../validation/UserRules.ts";
+import { UserRules } from "./UserRules.ts";
 
 export class UserController {
 

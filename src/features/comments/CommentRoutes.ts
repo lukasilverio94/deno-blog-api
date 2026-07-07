@@ -1,7 +1,7 @@
-import { isAuthenticated } from "../middlewares/AuthMiddleware.ts";
-import { CommentController } from './../controllers/CommentController.ts';
-import { CommentRepository } from './../models/Comment/CommentRepository.ts';
+import { isAuthenticated } from "../../middlewares/AuthMiddleware.ts";
+import { CommentRepository } from '../../models/Comment/CommentRepository.ts';
 import { Router } from 'npm:express';
+import { CommentController } from "./CommentController.ts";
 
 const CommentsRouter = Router();
 

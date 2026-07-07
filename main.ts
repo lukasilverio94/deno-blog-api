@@ -3,11 +3,11 @@ import express from "express";
 // @deno-types='npm:@types/morgan'
 import morgan from "morgan";
 import { connectMongoDB } from "./src/config/db.ts";
-import { UserRouter } from "./src/routes/UserRoutes.ts";
+import { UserRouter } from "./src/features/users/UserRoutes.ts";
 import responser from "responser";
-import { PostsRouter } from "./src/routes/PostsRoutes.ts";
-import { CommentsRouter } from "./src/routes/CommentRoutes.ts";
-import { AuthRouter } from "./src/routes/AuthRoutes.ts";
+import { PostsRouter } from "./src/features/posts/PostsRoutes.ts";
+import { CommentsRouter } from "./src/features/comments/CommentRoutes.ts";
+import { AuthRouter } from "./src/features/auth/AuthRoutes.ts";
 import { errorHandler } from "./src/middlewares/Error.ts";
 
 const app = express();

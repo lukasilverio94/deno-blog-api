@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { PostRepository } from './../models/Post/PostRepository.ts';
+import { PostRepository } from '../../models/Post/PostRepository.ts';
 
 export class PostController { 
     constructor(private readonly repository: PostRepository){}

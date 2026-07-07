@@ -1,5 +1,5 @@
-import { AuthController } from "./../controllers/AuthController.ts";
-import { UserRepository } from "./../models/User/UserRepository.ts";
+import { AuthController } from './AuthController.ts';
+import { UserRepository } from "../../models/User/UserRepository.ts";
 import { Router } from "express";
 
 const AuthRouter = Router();

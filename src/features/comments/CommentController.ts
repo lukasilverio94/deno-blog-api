@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { CommentRepository } from './../models/Comment/CommentRepository.ts';
+import { CommentRepository } from '../../models/Comment/CommentRepository.ts';
 
 export class CommentController {
     constructor(private readonly repository: CommentRepository) {}

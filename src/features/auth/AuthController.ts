@@ -1,7 +1,7 @@
 import  bcrypt from "bcrypt";
-import { signToken } from "./../utils/AuthUtil.ts";
+import { signToken } from "../../utils/AuthUtil.ts";
 import { Request, Response, NextFunction } from "express";
-import { UserRepository } from "../models/User/UserRepository.ts";
+import { UserRepository } from "../../models/User/UserRepository.ts";
 
 export class AuthController {
    constructor(private readonly repository: UserRepository){}
