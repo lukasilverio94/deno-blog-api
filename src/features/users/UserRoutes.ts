@@ -2,11 +2,13 @@ import { UserRepository } from '../../models/User/UserRepository.ts';
 import { UserController } from './UserController.ts';
 import { Router } from 'express';
 import { isAuthenticated } from "../../middlewares/AuthMiddleware.ts";
+import { UserService } from "./UserService.ts";
 
 const UserRouter = Router();
 
 const userRepository = new UserRepository();
-const userController = new UserController(userRepository);
+const userService = new UserService(userRepository);
+const userController = new UserController(userService);
 
 UserRouter.post('/api/users', userController.create);
 UserRouter.get('/api/users', userController.findAll);

@@ -1,13 +1,12 @@
+import { UserService } from './UserService.ts';
 import { signToken } from '../../utils/AuthUtil.ts';
 import { NextFunction } from 'express';
-import bcrypt from 'bcrypt';
-import { UserRepository } from "../../models/User/UserRepository.ts";
 import { Request, Response } from 'express';
 import { UserRules } from "./UserRules.ts";
 
 export class UserController {
 
-    constructor(private readonly userRepository: UserRepository, private readonly rules = new UserRules()){
+    constructor(private readonly userService: UserService, private readonly rules = new UserRules()){
         this.rules = rules;
     }
 
@@ -19,20 +18,8 @@ export class UserController {
                 { bio: req.body.bio },
                 { avatar: req.body.avatar }
             );
-
-            const { username, bio, avatar, password } = req.body;
-            const hashed = await bcrypt.hash(password, 12);
-            const existing = await this.userRepository.findOne({ username });
-            if (existing) {
-                return res.send_conflict('This username is already taken', { username });
-            }
-            const user = await this.userRepository.create({
-                username,
-                bio,
-                avatar,
-                password: hashed
-            });
-            const token = signToken({ userId: user._id });
+            const user = await this.userService.create(req.body);
+            const token = await signToken({ userId: user._id });
             return res.send_ok('User created succesfully', { token });
         } catch (error) {
             next(error);            
@@ -41,8 +28,8 @@ export class UserController {
 
     findAll = async(_req: Request, res: Response, next: NextFunction) => {
         try {
-            const users = await this.userRepository.findAll().select("-password");
-            return res.send_ok('', { users });
+            const users = await this.userService.findAll();
+            return res.send_ok('All users found', { users });
         } catch (error) {
             next(error);
         }
@@ -54,7 +41,7 @@ export class UserController {
             this.rules.validate(
                 {_id: id}
             )
-            const user = await this.userRepository.findById(id).select("-password");
+            const user = await this.userService.findById(id);
             return res.send_ok('', { user });
         } catch (error) {
             next(error);
@@ -64,16 +51,7 @@ export class UserController {
     update = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const { id } = req.params as { id: string };
-            const data = { ...req.body };
-
-            if (data.password) {
-                data.password = await bcrypt.hash(data.password, 12);
-            }
-
-            const user = await this.userRepository.update(id, data);
-            if (!user) {
-                return res.send_notFound("User not found")
-            }
+            const user = (await this.userService.updateById(id, req.body ));
             return res.send_noContent("User updated successfully", { userId: user._id});
         } catch (error) {
             next(error);
@@ -83,8 +61,8 @@ export class UserController {
     delete = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const { id } = req.params as { id: string };
-            const user = await this.userRepository.delete(id);
-            return res.send_ok('User deleted successfully', { user });
+            await this.userService.delete(id);
+            return res.send_noContent('User deleted successfully', { userId: id});
         } catch (error) {
             next(error);
         }

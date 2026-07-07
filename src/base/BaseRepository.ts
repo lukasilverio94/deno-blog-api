@@ -1,4 +1,6 @@
-import { Model, Types, QueryFilter, QueryOptions} from "mongoose";
+import { Model, Types, QueryFilter, QueryOptions, UpdateQuery, MongooseUpdateQueryOptions } from "mongoose";
+import is from '@zarco/isness';
+import { throwlhos } from "../globals/Throwlhos.ts";
 
 export class BaseRepository<T> {
   protected model: Model<T>;
@@ -24,8 +26,40 @@ export class BaseRepository<T> {
     return this.model.find();
   }
 
-  update(id: string | Types.ObjectId, item: Partial<T>){
-    return this.model.findByIdAndUpdate(id, item, { returnDocument: "after", runValidators: true});
+  updateOne(updateQuery: QueryFilter<T>,
+            update: UpdateQuery<T>,
+            options?: MongooseUpdateQueryOptions,
+   ) {
+     const findAndUpdate = this.model.findOneAndUpdate(
+        updateQuery as QueryFilter<T>,
+        update,
+        {
+          new: true,
+          runValidators: true,
+          ...options,
+        },
+      );
+
+    return findAndUpdate;
+  }
+
+
+  updateById(
+    id: string | Types.ObjectId,
+    update: UpdateQuery<T>,
+    options?: MongooseUpdateQueryOptions,
+  ) {
+    if (!is.objectId(id)) {
+      throw throwlhos.err_internalServerError(
+        'updateById requires a valid ObjectId',
+        {
+          givenId: id,
+          typeofGivenObjectId: typeof id,
+        },
+      )
+    }
+    const findByIdAndUpdate = this.updateOne( { _id: id }, update, options );
+    return findByIdAndUpdate;
   }
 
   delete(id: string | Types.ObjectId) {

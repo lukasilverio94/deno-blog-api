@@ -6,4 +6,8 @@ export class UserRepository extends BaseRepository<IUser> {
     constructor(){
         super(UserModel);
     }
+
+    findByUsername(username: string) {
+        return this.findOne({ username });
+    }
 }
