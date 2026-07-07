@@ -1,35 +1,21 @@
-import  bcrypt from "bcrypt";
-import { signToken } from "../../utils/AuthUtil.ts";
+import { AuthService } from './AuthService.ts';
 import { Request, Response, NextFunction } from "express";
-import { UserRepository } from "../../models/User/UserRepository.ts";
 
 export class AuthController {
-   constructor(private readonly repository: UserRepository){}
+   constructor(private readonly service: AuthService){}
    
    login = async(req: Request, res: Response, next: NextFunction) => {
-
-        const { username, password } = req.body;
-
         try {
-            const user = await this.repository.findOne({ username });
-            if (!user) {
-                return res.send_badRequest("Invalid credentials");
-            }
-
-            const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) {
-                return res.send_unauthorized("Invalid credentials");
-            }
-
-            const token = signToken({ userId: user._id });
+            const { username, password } = req.body;
+            const token = await this.service.login(username, password);
             res.send_ok(
                 "Login successfull",
                  { 
                     user: {
-                        userId: user._id, username: user.username, 
+                        userId: token._id, username: token.username, 
                     },
                     token 
-                 });
+                });
         } catch (error) {
             next(error);
         }
