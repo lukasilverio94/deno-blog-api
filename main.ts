@@ -8,6 +8,7 @@ import responser from "responser";
 import { PostsRouter } from "./src/routes/PostsRoutes.ts";
 import { CommentsRouter } from "./src/routes/CommentRoutes.ts";
 import { AuthRouter } from "./src/routes/AuthRoutes.ts";
+import { errorHandler } from "./src/middlewares/Error.ts";
 
 const app = express();
 const PORT = Number(Deno.env.get("PORT")) || 3000;
@@ -22,6 +23,8 @@ app.use(UserRouter);
 app.use(AuthRouter);
 app.use(PostsRouter);
 app.use(CommentsRouter);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

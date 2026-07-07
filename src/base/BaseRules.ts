@@ -1,6 +1,7 @@
 import requestCheck from 'npm:request-check';
 import { throwlhos } from "../globals/Throwlhos.ts";
-import { IThrowlhos } from 'npm:throwlhos'
+import { IThrowlhos } from 'npm:throwlhos';
+import is from '@zarco/isness';
 
 export type Validator = (...args: ICheckObj[]) => void
 
@@ -25,6 +26,12 @@ export class BaseRules {
     constructor() {
         this.rc = requestCheck.default();
         this.rc.setRequiredMessage("Field is required");
+
+        this.rc.addRule('pagination', {
+                validator: (value: any) => typeof value === 'object' && is.number(value.page) && is.number(value.limit),
+                  message: 'Invalid pagination value! It must be an object with the properties "page" and "limit".',
+              
+     });
     }
 
     validate = (...args: ICheckObj[]): void => {

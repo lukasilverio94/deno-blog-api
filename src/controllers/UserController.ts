@@ -3,7 +3,7 @@ import { NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import { UserRepository } from "../models/User/UserRepository.ts";
 import { Request, Response } from 'express';
-import { UserRules } from "../validation/UseRules.ts";
+import { UserRules } from "../validation/UserRules.ts";
 
 export class UserController {
 
@@ -15,8 +15,11 @@ export class UserController {
         try {
             this.rules.validate(
                 { username: req.body.username },
-                { password: req.body.password}
-            )
+                { password: req.body.password},
+                { bio: req.body.bio },
+                { avatar: req.body.avatar }
+            );
+
             const { username, bio, avatar, password } = req.body;
             const hashed = await bcrypt.hash(password, 12);
             const existing = await this.userRepository.findOne({ username });
@@ -32,7 +35,7 @@ export class UserController {
             const token = signToken({ userId: user._id });
             return res.send_ok('User created succesfully', { token });
         } catch (error) {
-            next(error);
+            next(error);            
         }
     }
 
