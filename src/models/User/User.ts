@@ -42,8 +42,7 @@ const userSchema = new Schema<IUser>({
         type: String,
         required: true,
         minlength: 4,
-        maxlength: 128,
-        select: false,
+        maxlength: 256,
     }
 }, {
     timestamps: true,

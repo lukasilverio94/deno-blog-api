@@ -13,7 +13,8 @@
     "npm:throwlhos": "npm:throwlhos@1.1.0",
     "responser": "npm:responser@^2.0.2",
     "npm:request-check": "npm:request-check@1.6.2",
-    "@zarco/isness": "jsr:@zarco/isness@^0.1.18"
+    "@zarco/isness": "jsr:@zarco/isness@^0.1.18",
+    "jsonwebtoken": "npm:jsonwebtoken@^9.0.3"
   },
   "allowScripts": {
     "allow": [],

@@ -7,6 +7,7 @@ import { UserRouter } from "./src/routes/UserRoutes.ts";
 import responser from "responser";
 import { PostsRouter } from "./src/routes/PostsRoutes.ts";
 import { CommentsRouter } from "./src/routes/CommentRoutes.ts";
+import { AuthRouter } from "./src/routes/AuthRoutes.ts";
 
 const app = express();
 const PORT = Number(Deno.env.get("PORT")) || 3000;
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(responser.default);
 
 app.use(UserRouter);
+app.use(AuthRouter);
 app.use(PostsRouter);
 app.use(CommentsRouter);
 

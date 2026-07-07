@@ -1,3 +1,4 @@
+import { signToken } from './../utils/AuthUtil.ts';
 import { NextFunction } from 'express';
 import bcrypt from 'npm:bcrypt';
 import { UserRepository } from "../models/User/UserRepository.ts";
@@ -29,7 +30,8 @@ export class UserController {
                 avatar,
                 password: hashed
             });
-            return res.send_ok('User cretad succesfully', { user });
+            const token = signToken({ userId: user._id });
+            return res.send_ok('User created succesfully', { token });
         } catch (error) {
             next(error);
         }
