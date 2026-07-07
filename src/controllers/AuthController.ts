@@ -22,7 +22,14 @@ export class AuthController {
             }
 
             const token = signToken({ userId: user._id });
-            res.send_ok("Login successfull", { userId: user._id, username: user.username, token });
+            res.send_ok(
+                "Login successfull",
+                 { 
+                    user: {
+                        userId: user._id, username: user.username, 
+                    },
+                    token 
+                 });
         } catch (error) {
             next(error);
         }

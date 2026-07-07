@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from "../utils/AuthUtil.ts";
 
-export const isAuthorized = (req: Request, res: Response, next: NextFunction) => {
+export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers?.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -12,7 +12,6 @@ export const isAuthorized = (req: Request, res: Response, next: NextFunction) =>
 
     try {
         const decoded = verifyToken(token);
-        console.log(typeof decoded.userId);
         (req as any).user = decoded.userId;
         next();
     } catch (error) {
