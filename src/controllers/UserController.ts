@@ -21,7 +21,7 @@ export class UserController {
             const hashed = await bcrypt.hash(password, 12);
             const existing = await this.userRepository.findOne({ username });
             if (existing) {
-                return res.send_conflict('This username is already taken');
+                return res.send_conflict('This username is already taken', { username });
             }
             const user = await this.userRepository.create({
                 username,
@@ -46,11 +46,38 @@ export class UserController {
 
     findById = async(req: Request, res: Response, next: NextFunction) => {
         try {
+            const { id } = req.params as { id: string };
             this.rules.validate(
-                {_id: req.params.id}
+                {_id: id}
             )
-            const user = await this.userRepository.findById(req.params.id);
+            const user = await this.userRepository.findById(id);
             return res.send_ok('', { user });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    update = async(req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { id } = req.params as { id: string };
+            const data = { ...req.body };
+
+            if (data.password) {
+                data.password = await bcrypt.hash(data.password, 12);
+            }
+
+            const user = await this.userRepository.update(id, data);
+            return res.send_ok('User updated successfully', { user });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    delete = async(req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { id } = req.params as { id: string };
+            const user = await this.userRepository.delete(id);
+            return res.send_ok('User deleted successfully', { user });
         } catch (error) {
             next(error);
         }

@@ -11,5 +11,7 @@ const userController = new UserController(userRepository);
 UserRouter.post('/api/users', userController.create);
 UserRouter.get('/api/users', userController.findAll);
 UserRouter.get('/api/users/:id', userController.findById);
+UserRouter.patch('/api/users/:id', userController.update);
+UserRouter.delete('/api/users/:id', userController.delete);
 
 export { UserRouter };

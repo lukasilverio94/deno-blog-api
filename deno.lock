@@ -6,6 +6,7 @@
     "jsr:@std/internal@^1.0.12": "1.0.14",
     "jsr:@zarco/isness@~0.1.18": "0.1.18",
     "npm:@types/express@*": "5.0.6",
+    "npm:@types/morgan@*": "1.9.10",
     "npm:bcrypt@*": "6.0.0",
     "npm:bcrypt@6": "6.0.0",
     "npm:express@*": "5.2.1",
@@ -79,6 +80,12 @@
     },
     "@types/http-errors@2.0.5": {
       "integrity": "sha512-r8Tayk8HJnX0FztbZN7oVqGccWgw98T/0neJphO91KkmOzug1KkofZURD4UaD5uH8AqcFLfdPErnBod0u71/qg=="
+    },
+    "@types/morgan@1.9.10": {
+      "integrity": "sha512-sS4A1zheMvsADRVfT0lYbJ4S9lmsey8Zo2F7cnbYjWHP67Q0AwMYuuzLlkIM2N8gAbb9cubhIVFwcIN2XyYCkA==",
+      "dependencies": [
+        "@types/node"
+      ]
     },
     "@types/node@26.1.0": {
       "integrity": "sha512-O0A1G3xPGy4w7AgQdAQYUlQ+BKk2Oovw8eRpofyp5KdBZULnbe+WqaOVNrm705SHphCiG4XHsACrSmPu1f+Kgw==",

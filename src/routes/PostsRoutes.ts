@@ -11,5 +11,7 @@ const postController = new PostController(blogPostRepository);
 PostsRouter.post('/api/posts', postController.create);
 PostsRouter.get('/api/posts', postController.findAll);
 PostsRouter.get('/api/posts/:id', postController.findById);
+PostsRouter.patch('/api/posts/:id', postController.update);
+PostsRouter.delete('/api/posts/:id', postController.delete);
 
 export { PostsRouter };
