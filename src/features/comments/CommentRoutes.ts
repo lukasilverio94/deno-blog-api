@@ -16,7 +16,7 @@ CommentsRouter.post('/api/comments', isAuthenticated, commentController.create);
 CommentsRouter.post('/api/posts/:postId/comments', isAuthenticated, commentController.create);
 CommentsRouter.get('/api/comments', commentController.findAll);
 CommentsRouter.get('/api/comments/:id', commentController.findById);
-CommentsRouter.get('/api/comments/post/:postId', commentController.findByPost);
+CommentsRouter.get('/api/comments/post/:postId', isAuthenticated, commentController.findByPost);
 CommentsRouter.patch('/api/comments/:id', isAuthenticated, commentController.update);
 CommentsRouter.delete('/api/comments/:id', isAuthenticated, commentController.delete);
 

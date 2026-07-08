@@ -125,6 +125,7 @@ Exemplo:
 - `POST /api/posts/:postId/comments` protegido
 - `GET /api/comments`
 - `GET /api/comments/:id`
+- `GET /api/comments/post/:postId` protegido
 - `PATCH /api/comments/:id` protegido
 - `DELETE /api/comments/:id` protegido
 
