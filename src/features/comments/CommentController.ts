@@ -1,12 +1,16 @@
 import { Request, Response, NextFunction } from "express";
 import { CommentService } from "./CommentService.ts";
 
+type AuthenticatedRequest = Request & { userId: string };
+
 export class CommentController {
     constructor(private readonly commentService: CommentService) {}
 
     create = async(req: Request, res: Response, next: NextFunction) => {
         try {
-            const comment = await this.commentService.create(req.body);
+            const { postId } = req.params as { postId?: string };
+            const { userId } = req as AuthenticatedRequest;
+            const comment = await this.commentService.create(req.body, userId, postId);
             return res.send_created('Comment created', { comment });
         } catch (error) {
             next(error);

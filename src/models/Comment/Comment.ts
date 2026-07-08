@@ -1,4 +1,4 @@
-import  mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { IComment } from './IComment.ts';
 
 export class Comment implements IComment {
@@ -30,7 +30,7 @@ const commentSchema = new Schema({
         ref: 'Post',
         required: true
     }
-});
+}, { timestamps: true });
 
 commentSchema.loadClass(Comment);
 

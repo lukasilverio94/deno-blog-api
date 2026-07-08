@@ -15,7 +15,7 @@ export const ObjectId = (objectId: string | mongoose.Types.ObjectId) => {
 export const StartTransaction = async (
   MongoDBConnection: mongoose.Connection,
 ) => {
-  const session = await MongoDBConnection.startSession()
-  await session.startTransaction()
-  return session
+  const session = await MongoDBConnection.startSession();
+  session.startTransaction();
+  return session;
 }

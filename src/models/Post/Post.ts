@@ -7,6 +7,7 @@ export class Post implements IPost {
     author: IPost["author"];
     published: IPost["published"]
     tags: IPost["tags"];
+    comments: IPost["comments"];
 
     constructor(post: IPost) {
         this.title = post.title;
@@ -14,6 +15,7 @@ export class Post implements IPost {
         this.author = post.author;
         this.published = post.published;
         this.tags = post.tags;
+        this.comments = post.comments;
     }
 }
 
@@ -46,10 +48,13 @@ const postSchema = new Schema({
         required: false,
         default: null
     },
-    comments: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Comment'
-    }]
+    comments: {
+        type: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Comment',
+        }],
+        default: []
+    }
 }, { timestamps: true });
 
 postSchema.loadClass(Post);
