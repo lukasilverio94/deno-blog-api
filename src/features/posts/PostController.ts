@@ -38,7 +38,8 @@ export class PostController {
     update = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const { id } = req.params as { id: string };
-            const post = await this.postService.updateById(id, req.body);
+            const { userId } = req as AuthenticatedRequest;
+            const post = await this.postService.updateById(id, req.body, userId);
             return res.send_noContent('Post updated successfully', { postId: post._id });
         } catch (error) {
             next(error);
@@ -48,7 +49,8 @@ export class PostController {
     delete = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const { id } = req.params as { id: string };
-            await this.postService.delete(id);
+            const { userId } = req as AuthenticatedRequest;
+            await this.postService.delete(id, userId);
             return res.send_noContent('Post deleted successfully', { postId: id });
         } catch (error) {
             next(error);

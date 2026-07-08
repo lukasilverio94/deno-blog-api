@@ -40,7 +40,8 @@ export class CommentController {
     update = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const { id } = req.params as { id: string };
-            const comment = await this.commentService.updateById(id, req.body);
+            const { userId } = req as AuthenticatedRequest; 
+            const comment = await this.commentService.updateById(id, req.body, userId);
             return res.send_noContent('Comment updated successfully', { commentId: comment._id });
         } catch (error) {
             next(error);
@@ -50,7 +51,9 @@ export class CommentController {
     delete = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const { id } = req.params as { id: string };
-            await this.commentService.delete(id);
+            const { userId } = req as AuthenticatedRequest; 
+
+            await this.commentService.delete(id, userId);
             return res.send_noContent('Comment deleted successfully', { commentId: id });
         } catch (error) {
             next(error);

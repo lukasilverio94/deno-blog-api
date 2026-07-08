@@ -11,6 +11,18 @@ export class CommentService {
         private readonly postRepository: PostRepository,
     ) {}
 
+    private ensureCommentOwner(comment: IComment, userId: string) {
+        const commentAuthor = String(comment.author);
+        const loggedUserId = String(userId);
+        if(commentAuthor !== loggedUserId) {
+            throw throwlhos.err_forbidden("You can only change your own comments", {
+                commentId: comment._id,
+                authorId: comment.author,
+                userId
+            });
+        }
+    }   
+
     async create(newComment: IComment & { postId?: string }, authorId: string, postId?: string) {
         const commentPostId = postId ?? newComment.postId ?? newComment.post?.toString();
         if (!commentPostId) {
@@ -67,19 +79,28 @@ export class CommentService {
         return comment;
     }
 
-    async updateById(id: string, data: Partial<IComment>) {
-        const comment = await this.commentRepository.updateById(id, data);
+    async updateById(id: string, data: Partial<IComment>, userId: string) {
+        const current = await this.commentRepository.findById(id);
+        if(!current) {
+            throw throwlhos.err_notFound("comment not found", { commentId: id });
+        }
+        this.ensureCommentOwner(current, userId);
+
+        const comment = await this.commentRepository.updateById(id, {
+            content: data.content,
+        });
         if (!comment) {
             throw throwlhos.err_notFound("Comment not found", { commentId: id });
         }
         return comment;
     }
 
-    async delete(id: string) {
+    async delete(id: string, userId: string) {
         const comment = await this.commentRepository.findById(id);
         if (!comment) {
             throw throwlhos.err_notFound("Comment not found", { commentId: id });
         }
+        this.ensureCommentOwner(comment, userId);
         await this.commentRepository.delete(id);
     }
 }
