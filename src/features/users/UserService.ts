@@ -4,23 +4,23 @@ import { throwlhos } from "../../globals/Throwlhos.ts";
 import { IUser } from "../../models/User/IUser.ts";
 import { UserRepository } from './../../models/User/UserRepository.ts';
 
-export class UserService { 
-  
-    constructor(private readonly userRepository: UserRepository){}
+export class UserService {
+
+    constructor(private readonly userRepository: UserRepository) { }
 
     async create(newUser: IUser) {
         const { username, password, bio, avatar } = newUser;
         const existing = await this.userRepository.findOne({ username });
         if (existing) {
-            throwlhos.err_conflict("Username already taken", { user: existing._id  })
+            throw throwlhos.err_conflict("Username already taken", { user: existing._id })
         }
         const hashed = await bcrypt.hash(password, 12);
         return await this.userRepository.create({
-                username,
-                bio,
-                avatar,
-                password: hashed
-            });
+            username,
+            bio,
+            avatar,
+            password: hashed
+        });
     }
 
     async findByUserName(username: string) {
@@ -29,8 +29,8 @@ export class UserService {
 
     async findAll() {
         const users = await this.userRepository.findAll().select("-password").sort({ createdAt: -1 });
-        if (!users.length){
-            throwlhos.err_notFound("Not found any user");
+        if (!users.length) {
+            throw throwlhos.err_notFound("Not found any user");
         }
         return users;
     }
@@ -43,15 +43,14 @@ export class UserService {
         return user;
     }
 
-    async updateById(id: string, data: IUser) { 
+    async updateById(id: string, data: IUser) {
         if (data.password) {
             data.password = await bcrypt.hash(data.password, 12);
         }
         const user = await this.userRepository.updateById(id, data);
-          if (!user) {
+        if (!user) {
             throw throwlhos.err_notFound("User not found", { userId: id });
         }
-        console.log("user on service: " , user)
         return user;
     }
 

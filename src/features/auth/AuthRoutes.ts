@@ -10,5 +10,4 @@ const authController = new AuthController(authService);
 
 AuthRouter.post("/api/login", authController.login);
 
-
 export { AuthRouter };
