@@ -6,7 +6,10 @@ API CRUD em Deno com Express, MongoDB, Mongoose, JWT, utilizando arquitetura em 
 
 - Deno instalado
 - MongoDB disponível
-- Para transações MongoDB, use MongoDB Atlas ou uma instância local configurada como replica set
+- Para transações MongoDB, use MongoDB Atlas ou uma instância local configurada como replica set.
+
+  Ler mais sobre em uma pergunta no MongoDB Community:
+  - https://www.mongodb.com/community/forums/t/why-replica-set-is-mandatory-for-transactions-in-mongodb/9533
 
 ## Configuração
 
@@ -28,7 +31,7 @@ deno task dev
 ## Testes
 
 ```bash
-deno task test
+deno test
 ```
 
 ## Autenticação
@@ -57,6 +60,17 @@ Authorization: Bearer {{auth_token}}
 
 ### Auth
 
+`POST /api/register`
+
+```json
+{
+    "username": "lucas",
+    "bio": "this is a test bio", 
+    "avatar": "this is a test avatar",
+    "password": "test123"
+}
+```
+
 `POST /api/login`
 
 ```json
@@ -68,7 +82,6 @@ Authorization: Bearer {{auth_token}}
 
 ### Users
 
-- `POST /api/users`
 - `GET /api/users`
 - `GET /api/users/:id`
 - `PATCH /api/users/:id` protegido
@@ -138,7 +151,7 @@ Também é possível usar `POST /api/comments` enviando o post(id) no body:
 }
 ```
 
-## Transação
+## Transaction
 
 A criação de comentário executa uma operação atômica:
 
@@ -152,5 +165,5 @@ Se uma das operações falhar, a transação é abortada.
 Publique a collection do Postman e adicione o link aqui:
 
 ```txt
-Postman docs: Em construção...
+Postman docs: (https://documenter.getpostman.com/view/15673067/2sBY4JxiEw)
 ```
