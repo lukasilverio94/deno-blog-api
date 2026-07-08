@@ -2,11 +2,13 @@ import { isAuthenticated } from "../../middlewares/AuthMiddleware.ts";
 import { CommentRepository } from '../../models/Comment/CommentRepository.ts';
 import { Router } from 'npm:express';
 import { CommentController } from "./CommentController.ts";
+import { CommentService } from "./CommentService.ts";
 
 const CommentsRouter = Router();
 
 const commentRepository = new CommentRepository();
-const commentController = new CommentController(commentRepository);
+const commentService = new CommentService(commentRepository);
+const commentController = new CommentController(commentService);
 
 CommentsRouter.post('/api/comments', isAuthenticated, commentController.create);
 CommentsRouter.get('/api/comments', commentController.findAll);

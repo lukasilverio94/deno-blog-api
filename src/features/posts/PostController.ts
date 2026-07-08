@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { PostRepository } from '../../models/Post/PostRepository.ts';
+import { PostService } from "./PostService.ts";
 
 export class PostController { 
-    constructor(private readonly repository: PostRepository){}
+    constructor(private readonly postService: PostService){}
 
     create = async(req: Request, res: Response, next: NextFunction) => {
         try {
-            const post = await this.repository.create(req.body);
+            const post = await this.postService.create(req.body);
             return res.send_ok('Post created successfully', { post });
         } catch (error) {
             next(error);
@@ -15,8 +15,8 @@ export class PostController {
 
       findAll = async(_req: Request, res: Response, next: NextFunction) => {
         try {
-            const posts = await this.repository.findAll();
-            return res.send_ok('', { posts });
+            const posts = await this.postService.findAll();
+            return res.send_ok('All posts found', { posts });
         } catch (error) {
             next(error);
         }
@@ -25,7 +25,7 @@ export class PostController {
     findById = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const { id } = req.params as { id: string };
-            const post = await this.repository.findById(id);
+            const post = await this.postService.findById(id);
             return res.send_ok('', { post });
         } catch (error) {
             next(error);
@@ -35,8 +35,8 @@ export class PostController {
     update = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const { id } = req.params as { id: string };
-            const post = await this.repository.update(id, req.body);
-            return res.send_ok('Post updated successfully', { post });
+            const post = await this.postService.updateById(id, req.body);
+            return res.send_noContent('Post updated successfully', { postId: post._id });
         } catch (error) {
             next(error);
         }
@@ -45,8 +45,8 @@ export class PostController {
     delete = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const { id } = req.params as { id: string };
-            const post = await this.repository.delete(id);
-            return res.send_ok('Post deleted successfully', { post });
+            await this.postService.delete(id);
+            return res.send_noContent('Post deleted successfully', { postId: id });
         } catch (error) {
             next(error);
         }
