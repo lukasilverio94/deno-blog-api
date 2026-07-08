@@ -4,6 +4,7 @@ import { MockResponser, MockNextFunction } from "./../../globals/Stubs.ts";
 import { assertEquals } from "@std/assert";
 import { Request } from "express";
 import { CommentController } from "./CommentController.ts";
+import { throwlhos } from "../../globals/Throwlhos.ts";
 
 
 class MockCommentService {
@@ -179,4 +180,50 @@ Deno.test("CommentController: should delete a comment", async () => {
   assertEquals(result.code, 204);
   assertEquals(result.message, "Comment deleted successfully");
   assertEquals(result.data.commentId, "comment-id");
+});
+
+/*
+ Error cases
+*/
+Deno.test("CommentController: should call next when service throws", async () => {
+    const error = throwlhos.err_badRequest(
+      "Post id is required to create a comment",
+    );
+
+    class MockCommentService {
+      create() {
+        return Promise.reject(error);
+      }
+    }
+
+    const controller = new CommentController(
+      new MockCommentService() as unknown as CommentService,
+    );
+
+    let receivedError: any;
+
+    const next = (err: any) => {
+      receivedError = err;
+    };
+
+    const request = {
+      params: {},
+      body: {
+        content: "Test comment",
+      },
+      userId: "user-id",
+    } as unknown as Request;
+
+    await controller.create(
+      request,
+      MockResponser as any,
+      next as any,
+    );
+
+    assertEquals(receivedError, error);
+    assertEquals(receivedError.code, 400);
+    assertEquals(
+      receivedError.message,
+      "Post id is required to create a comment",
+    );
 });
