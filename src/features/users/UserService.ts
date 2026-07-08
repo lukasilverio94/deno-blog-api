@@ -8,21 +8,6 @@ export class UserService {
 
     constructor(private readonly userRepository: UserRepository) { }
 
-    async create(newUser: IUser) {
-        const { username, password, bio, avatar } = newUser;
-        const existing = await this.userRepository.findOne({ username });
-        if (existing) {
-            throw throwlhos.err_conflict("Username already taken", { user: existing._id })
-        }
-        const hashed = await bcrypt.hash(password, 12);
-        return await this.userRepository.create({
-            username,
-            bio,
-            avatar,
-            password: hashed
-        });
-    }
-
     async findByUserName(username: string) {
         return await this.userRepository.findOne({ username });
     }

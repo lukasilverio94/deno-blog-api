@@ -1,8 +1,4 @@
 export class MockUserService {
-    create() {
-    return Promise.resolve({});
-    }
-
     findAll() {
     return Promise.resolve([]);
     }

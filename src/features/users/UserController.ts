@@ -1,5 +1,4 @@
 import { UserService } from './UserService.ts';
-import { signToken } from '../../utils/AuthUtil.ts';
 import { NextFunction } from 'express';
 import { Request, Response } from 'express';
 import { UserRules } from "./UserRules.ts";
