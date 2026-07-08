@@ -27,8 +27,7 @@ export class PostService {
 
     async findAll() {
         const posts = await this.postRepository
-            .findAll()
-            .select("-comments")
+            .findAll()            
             .populate("author", "username")
             .sort({ createdAt: -1 });
         if (!posts.length) {
@@ -41,7 +40,6 @@ export class PostService {
         const post = await this.postRepository
             .findOne({ _id: ObjectId(id) })
             .populate("author", "username")
-            .populate("comments");
         if (!post) {
             throw throwlhos.err_notFound("Post not found", { postId: id });
         }

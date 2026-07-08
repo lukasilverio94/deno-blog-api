@@ -31,8 +31,19 @@ export class CommentController {
         try {
             const { id } = req.params as { id: string };
             const comment = await this.commentService.findById(id);
-            return res.send_ok('', { comment });
+            return res.send_ok('Comment found', { comment });
         } catch (error) {
+            next(error);
+        }
+    }
+
+    findByPost = async(req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { postId } = req.params as { postId: string };
+            const comments = await this.commentService.findByPost(postId);
+            return res.send_ok('All comments in this post', { comments });
+        }
+        catch (error) {
             next(error);
         }
     }

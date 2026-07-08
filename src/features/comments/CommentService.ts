@@ -79,6 +79,13 @@ export class CommentService {
         return comment;
     }
 
+    async findByPost(postId: string) {
+        const commentsInPost = await this.commentRepository.findByPost(postId);
+        if (commentsInPost.length === 0) {
+            throw throwlhos.err_notFound("No comments found in this post", { postId })}
+        return commentsInPost;
+    }
+
     async updateById(id: string, data: Partial<IComment>, userId: string) {
         const current = await this.commentRepository.findById(id);
         if(!current) {
