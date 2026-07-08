@@ -10,22 +10,6 @@ export class UserController {
         this.rules = rules;
     }
 
-    create = async(req: Request, res: Response, next: NextFunction) => {
-        try {
-            this.rules.validate(
-                { username: req.body.username },
-                { password: req.body.password},
-                { bio: req.body.bio },
-                { avatar: req.body.avatar }
-            );
-            const user = await this.userService.create(req.body);
-            const token = await signToken({ userId: user._id });
-            return res.send_ok('User created succesfully', { token });
-        } catch (error) {
-            next(error);            
-        }
-    }
-
     findAll = async(_req: Request, res: Response, next: NextFunction) => {
         try {
             const users = await this.userService.findAll();

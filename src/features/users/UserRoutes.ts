@@ -10,7 +10,6 @@ const userRepository = new UserRepository();
 const userService = new UserService(userRepository);
 const userController = new UserController(userService);
 
-UserRouter.post('/api/users', userController.create);
 UserRouter.get('/api/users', userController.findAll);
 UserRouter.get('/api/users/:id', userController.findById);
 UserRouter.patch('/api/users/:id', isAuthenticated, userController.update);
