@@ -1,12 +1,15 @@
 import { Request, Response, NextFunction } from "express";
 import { PostService } from "./PostService.ts";
 
+type AuthenticatedRequest = Request & { userId: string };
+
 export class PostController { 
     constructor(private readonly postService: PostService){}
 
     create = async(req: Request, res: Response, next: NextFunction) => {
         try {
-            const post = await this.postService.create(req.body);
+            const { userId } = req as AuthenticatedRequest;
+            const post = await this.postService.create(req.body, userId);
             return res.send_ok('Post created successfully', { post });
         } catch (error) {
             next(error);

@@ -43,6 +43,7 @@ const userSchema = new Schema<IUser>({
         required: true,
         minlength: 6,
         maxlength: 256,
+        select: false,
     }
 }, {
     timestamps: true,
