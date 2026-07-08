@@ -162,8 +162,6 @@ Se uma das operações falhar, a transação é abortada.
 
 ## Documentação Publicada
 
-Publique a collection do Postman e adicione o link aqui:
+A documentação da API está disponível no Postman:
 
-```txt
-Postman docs: (https://documenter.getpostman.com/view/15673067/2sBY4JxiEw)
-```
+- [Postman Docs](https://documenter.getpostman.com/view/15673067/2sBY4JxiEw)
