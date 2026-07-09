@@ -106,9 +106,9 @@ Deno.test("CommentController: should update a comment", async () => {
     MockNextFunction as any,
   ) as any;
 
-  assertEquals(result.code, 204);
+  assertEquals(result.code, 200);
   assertEquals(result.message, "Comment updated successfully");
-  assertEquals(result.data.commentId, "comment-id");
+  assertEquals(result.data.comment._id, "comment-id");
 });
 
 Deno.test("CommentController: should delete a comment", async () => {
@@ -125,9 +125,9 @@ Deno.test("CommentController: should delete a comment", async () => {
     MockNextFunction as any,
   ) as any;
 
-  assertEquals(result.code, 204);
+  assertEquals(result.code, 200);
   assertEquals(result.message, "Comment deleted successfully");
-  assertEquals(result.data.commentId, "comment-id");
+  assertEquals(result.data.comment._id, "comment-id");
 });
 
 Deno.test("CommentController: should call next when post id is missing", async () => {

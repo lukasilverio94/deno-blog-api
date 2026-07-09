@@ -70,7 +70,7 @@ export class MockCommentService {
   }
 
   delete() {
-    return Promise.resolve();
+    return Promise.resolve(mockComment);
   }
 }
 

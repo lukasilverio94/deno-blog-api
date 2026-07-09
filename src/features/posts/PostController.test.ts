@@ -84,9 +84,9 @@ Deno.test("PostController: should update a post", async () => {
     MockNextFunction as any,
   ) as any;
 
-  assertEquals(result.code, 204);
+  assertEquals(result.code, 200);
   assertEquals(result.message, "Post updated successfully");
-  assertEquals(result.data.postId, "post-id");
+  assertEquals(result.data.post._id, "post-id");
 });
 
 Deno.test("PostController: should delete a post", async () => {
@@ -103,9 +103,9 @@ Deno.test("PostController: should delete a post", async () => {
     MockNextFunction as any,
   ) as any;
 
-  assertEquals(result.code, 204);
+  assertEquals(result.code, 200);
   assertEquals(result.message, "Post deleted successfully");
-  assertEquals(result.data.postId, "post-id");
+  assertEquals(result.data.post._id, "post-id");
 });
 
 Deno.test("PostController: should call next when post is not found", async () => {

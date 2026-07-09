@@ -66,9 +66,10 @@ Deno.test("UserController: should update a user", async () => {
     MockNextFunction as any,
   ) as any;
 
-  assertEquals(result.code, 204);
+  assertEquals(result.code, 200);
   assertEquals(result.message, "User updated successfully");
-  assertEquals(result.data.userId, "user-1");
+  assertEquals(result.data.user._id, "user-1");
+  assertEquals(result.data.user.username, "lucas-updated");
 });
 
 Deno.test("UserController: should delete a user", async () => {
@@ -84,9 +85,10 @@ Deno.test("UserController: should delete a user", async () => {
     MockNextFunction as any,
   ) as any;
 
-  assertEquals(result.code, 204);
+  assertEquals(result.code, 200);
   assertEquals(result.message, "User deleted successfully");
-  assertEquals(result.data.userId, "user-1");
+  assertEquals(result.data.user._id, "user-1");
+  assertEquals(result.data.user.password, undefined);
 });
 
 Deno.test("UserController: should call next when user is not found", async () => {

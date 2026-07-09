@@ -53,7 +53,7 @@ export class MockUserService {
   }
 
   delete() {
-    return Promise.resolve();
+    return Promise.resolve(mockUser);
   }
 }
 

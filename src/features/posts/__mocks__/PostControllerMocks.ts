@@ -46,13 +46,11 @@ export class MockPostService {
   }
 
   updateById() {
-    return Promise.resolve({
-      _id: "post-id",
-    });
+    return Promise.resolve(mockPost);
   }
 
   delete() {
-    return Promise.resolve();
+    return Promise.resolve(mockPost);
   }
 }
 
