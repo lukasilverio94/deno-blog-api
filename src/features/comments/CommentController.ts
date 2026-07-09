@@ -53,7 +53,12 @@ export class CommentController {
             const { id } = req.params as { id: string };
             const { userId } = req as AuthenticatedRequest; 
             const comment = await this.commentService.updateById(id, req.body, userId);
-            return res.send_noContent('Comment updated successfully', { commentId: comment._id });
+            const updatedFields = Object.keys(req.body);
+            return res.send_ok('Comment updated successfully', {
+                comment,
+                updatedFields,
+                updatedFieldsCount: updatedFields.length,
+            });
         } catch (error) {
             next(error);
         }
@@ -64,8 +69,8 @@ export class CommentController {
             const { id } = req.params as { id: string };
             const { userId } = req as AuthenticatedRequest; 
 
-            await this.commentService.delete(id, userId);
-            return res.send_noContent('Comment deleted successfully', { commentId: id });
+            const comment = await this.commentService.delete(id, userId);
+            return res.send_ok('Comment deleted successfully', { comment });
         } catch (error) {
             next(error);
         }

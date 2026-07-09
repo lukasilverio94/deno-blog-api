@@ -40,7 +40,12 @@ export class PostController {
             const { id } = req.params as { id: string };
             const { userId } = req as AuthenticatedRequest;
             const post = await this.postService.updateById(id, req.body, userId);
-            return res.send_noContent('Post updated successfully', { postId: post._id });
+            const updatedFields = Object.keys(req.body);
+            return res.send_ok('Post updated successfully', {
+                post,
+                updatedFields,
+                updatedFieldsCount: updatedFields.length,
+            });
         } catch (error) {
             next(error);
         }
@@ -50,8 +55,8 @@ export class PostController {
         try {
             const { id } = req.params as { id: string };
             const { userId } = req as AuthenticatedRequest;
-            await this.postService.delete(id, userId);
-            return res.send_noContent('Post deleted successfully', { postId: id });
+            const post = await this.postService.delete(id, userId);
+            return res.send_ok('Post deleted successfully', { post });
         } catch (error) {
             next(error);
         }

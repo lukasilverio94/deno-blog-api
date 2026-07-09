@@ -75,5 +75,6 @@ export class PostService {
         this.ensurePostOwner(post, userId);
 
         await this.postRepository.delete(id);
+        return post;
     }
 }

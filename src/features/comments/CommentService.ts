@@ -109,5 +109,6 @@ export class CommentService {
         }
         this.ensureCommentOwner(comment, userId);
         await this.commentRepository.delete(id);
+        return comment;
     }
 }
