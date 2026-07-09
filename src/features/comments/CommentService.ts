@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-import { ObjectId, StartTransaction } from "../../globals/Mongo.ts";
+import { ObjectId } from "../../globals/Mongo.ts";
 import { throwlhos } from "../../globals/Throwlhos.ts";
 import { IComment } from "../../models/Comment/IComment.ts";
 import { CommentRepository } from "../../models/Comment/CommentRepository.ts";
@@ -35,25 +34,11 @@ export class CommentService {
             throw throwlhos.err_notFound("Post not found", { postId: commentPostId });
         }
 
-        const session = await StartTransaction(mongoose.connection);
-
-        try {
-            const [comment] = await this.commentRepository.createWithSession({
-                content: newComment.content,
-                author: ObjectId(authorId),
-                post: postObjectId,
-            }, session);
-
-            await this.postRepository.addComment(postObjectId, comment._id, session);
-
-            await session.commitTransaction();
-            return comment;
-        } catch (error) {
-            await session.abortTransaction();
-            throw error;
-        } finally {
-            await session.endSession();
-        }
+        return await this.commentRepository.create({
+            content: newComment.content,
+            author: ObjectId(authorId),
+            post: postObjectId,
+        });
     }
 
     async findAll() {

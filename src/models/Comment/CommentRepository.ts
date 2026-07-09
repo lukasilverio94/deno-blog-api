@@ -8,14 +8,14 @@ export class CommentRepository extends BaseRepository<IComment> {
         super(CommentModel);
     }
 
-    createWithSession(data: Partial<IComment>, session: ClientSession) {
-        return CommentModel.create([data], { session });
-    }
-
     findByPost(postId: string | Types.ObjectId) {
         return this.model
             .find({ post: postId })
             .populate("author", "username")
             .sort({ createdAt: 1 });
+    }
+
+    deleteManyByPostId(postId: string, session: ClientSession) {
+        return CommentModel.deleteMany({ post: postId }).session(session);
     }
 }

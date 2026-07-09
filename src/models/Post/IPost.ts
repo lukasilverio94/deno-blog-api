@@ -7,5 +7,4 @@ export interface IPost extends IBaseInterface {
   author: Types.ObjectId;
   published?: boolean;
   tags?: string[];
-  comments?: Types.ObjectId[];
 }

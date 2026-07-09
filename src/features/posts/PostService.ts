@@ -1,10 +1,15 @@
-import { ObjectId } from "../../globals/Mongo.ts";
+import { ObjectId, StartTransaction } from "../../globals/Mongo.ts";
 import { throwlhos } from "../../globals/Throwlhos.ts";
 import { IPost } from "../../models/Post/IPost.ts";
 import { PostRepository } from "../../models/Post/PostRepository.ts";
+import { CommentRepository } from "../../models/Comment/CommentRepository.ts";
+import mongoose from "mongoose";
 
 export class PostService {
-    constructor(private readonly postRepository: PostRepository) { }
+    constructor(
+        private readonly postRepository: PostRepository,
+        private readonly commentRepository: CommentRepository
+    ) { }
 
     private ensurePostOwner(post: IPost, userId: string) {
         const postAuthorId = String(post.author);
@@ -74,7 +79,19 @@ export class PostService {
         }
         this.ensurePostOwner(post, userId);
 
-        await this.postRepository.delete(id);
-        return post;
+        const session = await StartTransaction(mongoose.connection);
+        try {
+            await this.commentRepository.deleteManyByPostId(id, session);
+            await this.postRepository.deleteById(id, session);
+
+            await session.commitTransaction();
+
+            return post;
+        } catch (error) {
+            await session.abortTransaction();
+            throw error;
+        } finally {
+            await session.endSession();
+        }
     }
 }
