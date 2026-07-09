@@ -20,7 +20,7 @@ export class AuthController {
                 { password }, 
             );
             const { token } = await this.service.register(req.body);
-            res.send_created("Registered sucessfuly",{ token } )
+            return res.send_created("Registered sucessfuly",{ token } )
         } catch (error) {
             next(error);
         }
@@ -34,7 +34,7 @@ export class AuthController {
                 { password }
             )
             const login = await this.service.login(username, password);
-            res.send_ok(
+            return res.send_ok(
                 "Login successful",
                 login,
             );

@@ -1,69 +1,29 @@
 import "responser";
-import { MockResponser, MockNextFunction} from './../../globals/Stubs.ts';
+import { MockNextFunction, MockResponser } from "../../globals/Stubs.ts";
 import { assertEquals } from "@std/assert";
 import { Request } from "express";
 import { PostController } from "./PostController.ts";
 import { PostService } from "./PostService.ts";
+import {
+  MockPostService,
+  MockPostServiceForbidden,
+  MockPostServiceNotFound,
+  mockPost,
+  postForbiddenError,
+  postNotFoundError,
+} from "./__mocks__/PostControllerMocks.ts";
 
-class MockPostService {
-  create() {
-    return Promise.resolve({
-      _id: "post-id",
-      title: "Test post",
-      content: "This is a valid test post content.",
-      author: "user-id",
-      published: true,
-      tags: ["deno"],
-    });
-  }
-
-  findById() {
-    return Promise.resolve({
-      _id: "post-id",
-      title: "Test post",
-      content: "This is a valid test post content.",
-      author: "user-id",
-      published: true,
-      tags: ["deno"],
-    });
-  }
-
-  findAll() {
-    return Promise.resolve([
-      {
-        _id: "post-1",
-        title: "First",
-      },
-      {
-        _id: "post-2",
-        title: "Second",
-      },
-    ]);
-  }
-
-  updateById() {
-    return Promise.resolve({
-      _id: "post-id",
-    });
-  }
-
-  delete() {
-    return Promise.resolve();
-  }
-}
-
-const mockPostService = new MockPostService();
 const postController = new PostController(
-  mockPostService as unknown as PostService,
+  new MockPostService() as unknown as PostService,
 );
-// -------------------- create --------------------------------
+
 Deno.test("PostController: should create a post", async () => {
   const request = {
     body: {
-      title: "Test post",
-      content: "This is a valid test post content.",
-      published: true,
-      tags: ["deno"],
+      title: mockPost.title,
+      content: mockPost.content,
+      published: mockPost.published,
+      tags: mockPost.tags,
     },
     userId: "user-id",
   } as unknown as Request;
@@ -76,10 +36,9 @@ Deno.test("PostController: should create a post", async () => {
 
   assertEquals(result.code, 200);
   assertEquals(result.message, "Post created successfully");
-  assertEquals(result.data.post._id, "post-id");
+  assertEquals(result.data.post._id, mockPost._id);
 });
 
-// -------------------- findById --------------------------------
 Deno.test("PostController: should show a post", async () => {
   const request = {
     params: {
@@ -94,10 +53,9 @@ Deno.test("PostController: should show a post", async () => {
   ) as any;
 
   assertEquals(result.message, "");
-  assertEquals(result.data.post._id, "post-id");
+  assertEquals(result.data.post._id, mockPost._id);
 });
 
-// -------------------- findAll --------------------------------
 Deno.test("PostController: should return all posts", async () => {
   const result = await postController.findAll(
     {} as Request,
@@ -109,7 +67,6 @@ Deno.test("PostController: should return all posts", async () => {
   assertEquals(result.data.posts.length, 2);
 });
 
-// -------------------- update --------------------------------
 Deno.test("PostController: should update a post", async () => {
   const request = {
     params: {
@@ -132,7 +89,6 @@ Deno.test("PostController: should update a post", async () => {
   assertEquals(result.data.postId, "post-id");
 });
 
-// -------------------- delete --------------------------------
 Deno.test("PostController: should delete a post", async () => {
   const request = {
     params: {
@@ -150,4 +106,54 @@ Deno.test("PostController: should delete a post", async () => {
   assertEquals(result.code, 204);
   assertEquals(result.message, "Post deleted successfully");
   assertEquals(result.data.postId, "post-id");
+});
+
+Deno.test("PostController: should call next when post is not found", async () => {
+  const controller = new PostController(
+    new MockPostServiceNotFound() as unknown as PostService,
+  );
+
+  let receivedError: any;
+  const next = (err: any) => {
+    receivedError = err;
+  };
+
+  const request = {
+    params: {
+      id: "invalid-id",
+    },
+  } as unknown as Request;
+
+  await controller.findById(request, MockResponser as any, next as any);
+
+  assertEquals(receivedError, postNotFoundError);
+  assertEquals(receivedError.code, 404);
+  assertEquals(receivedError.message, "Post not found");
+});
+
+Deno.test("PostController: should call next when user is not post owner", async () => {
+  const controller = new PostController(
+    new MockPostServiceForbidden() as unknown as PostService,
+  );
+
+  let receivedError: any;
+  const next = (err: any) => {
+    receivedError = err;
+  };
+
+  const request = {
+    params: {
+      id: "post-id",
+    },
+    body: {
+      title: "Updated title",
+    },
+    userId: "other-user-id",
+  } as unknown as Request;
+
+  await controller.update(request, MockResponser as any, next as any);
+
+  assertEquals(receivedError, postForbiddenError);
+  assertEquals(receivedError.code, 403);
+  assertEquals(receivedError.message, "You can only change your own posts");
 });

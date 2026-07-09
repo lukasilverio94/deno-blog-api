@@ -1,72 +1,24 @@
 import "responser";
-import { CommentService } from "./CommentService.ts";
-import { MockResponser, MockNextFunction } from "./../../globals/Stubs.ts";
+import { MockNextFunction, MockResponser } from "../../globals/Stubs.ts";
 import { assertEquals } from "@std/assert";
 import { Request } from "express";
 import { CommentController } from "./CommentController.ts";
-import { throwlhos } from "../../globals/Throwlhos.ts";
-
-
-class MockCommentService {
-  create() {
-    return Promise.resolve({
-      _id: "comment-id",
-      content: "This is a valid test comment",
-      author: "user-id",
-      post: "post-id",
-    });
-  }
-
-  findById() {
-    return Promise.resolve({
-      _id: "comment-id",
-      content: "comment content",
-      author: "user-id",
-      post: "post-id",
-    });
-  }
-
-  findAll() {
-    return Promise.resolve([
-      {
-        _id: "comment-1",
-        content: "First comment",
-      },
-      {
-        _id: "comment-2",
-        content: "Second comment",
-      },
-    ]);
-  }
-
-  findByPost() {
-    return Promise.resolve([
-      {
-        _id: "comment-id",
-        content: "comment content",
-        post: "post-id",
-      },
-    ]);
-  }
-
-  updateById() {
-    return Promise.resolve({
-      _id: "comment-id",
-      content: "Updated comment content",
-    });
-  }
-
-  delete() {
-    return Promise.resolve();
-  }
-}
+import { CommentService } from "./CommentService.ts";
+import {
+  MockCommentService,
+  MockCommentServiceForbidden,
+  MockCommentServiceMissingPostId,
+  MockCommentServiceNotFound,
+  commentForbiddenError,
+  commentNotFoundError,
+  missingPostIdError,
+  mockComment,
+} from "./__mocks__/CommentControllerMocks.ts";
 
 const commentController = new CommentController(
   new MockCommentService() as unknown as CommentService,
 );
 
-
-// -------------------- create --------------------------------
 Deno.test("CommentController: should create a comment", async () => {
   const request = {
     params: {
@@ -78,7 +30,6 @@ Deno.test("CommentController: should create a comment", async () => {
     userId: "user-id",
   } as unknown as Request;
 
-
   const result = await commentController.create(
     request,
     MockResponser as any,
@@ -87,10 +38,9 @@ Deno.test("CommentController: should create a comment", async () => {
 
   assertEquals(result.code, 201);
   assertEquals(result.message, "Comment created");
-  assertEquals(result.data.comment._id, "comment-id");
+  assertEquals(result.data.comment._id, mockComment._id);
 });
 
-// -------------------- findById --------------------------------
 Deno.test("CommentController: should show a comment", async () => {
   const request = {
     params: {
@@ -106,10 +56,9 @@ Deno.test("CommentController: should show a comment", async () => {
 
   assertEquals(result.code, 200);
   assertEquals(result.message, "Comment found");
-  assertEquals(result.data.comment._id, "comment-id");
+  assertEquals(result.data.comment._id, mockComment._id);
 });
 
-// -------------------- findAll --------------------------------
 Deno.test("CommentController: should return all comments", async () => {
   const result = await commentController.findAll(
     {} as Request,
@@ -122,7 +71,6 @@ Deno.test("CommentController: should return all comments", async () => {
   assertEquals(result.data.comments.length, 2);
 });
 
-// -------------------- findByPost --------------------------------
 Deno.test("CommentController: should return comments from post", async () => {
   const request = {
     params: {
@@ -138,10 +86,9 @@ Deno.test("CommentController: should return comments from post", async () => {
 
   assertEquals(result.code, 200);
   assertEquals(result.data.comments.length, 1);
-  assertEquals(result.data.comments[0]._id, "comment-id");
+  assertEquals(result.data.comments[0]._id, mockComment._id);
 });
 
-// -------------------- update --------------------------------
 Deno.test("CommentController: should update a comment", async () => {
   const request = {
     params: {
@@ -150,6 +97,7 @@ Deno.test("CommentController: should update a comment", async () => {
     body: {
       content: "Updated comment content",
     },
+    userId: "user-id",
   } as unknown as Request;
 
   const result = await commentController.update(
@@ -163,12 +111,12 @@ Deno.test("CommentController: should update a comment", async () => {
   assertEquals(result.data.commentId, "comment-id");
 });
 
-// -------------------- delete --------------------------------
 Deno.test("CommentController: should delete a comment", async () => {
   const request = {
     params: {
       id: "comment-id",
     },
+    userId: "user-id",
   } as unknown as Request;
 
   const result = await commentController.delete(
@@ -182,48 +130,77 @@ Deno.test("CommentController: should delete a comment", async () => {
   assertEquals(result.data.commentId, "comment-id");
 });
 
-/*
- Error cases
-*/
-Deno.test("CommentController: should call next when service throws", async () => {
-    const error = throwlhos.err_badRequest(
-      "Post id is required to create a comment",
-    );
+Deno.test("CommentController: should call next when post id is missing", async () => {
+  const controller = new CommentController(
+    new MockCommentServiceMissingPostId() as unknown as CommentService,
+  );
 
-    class MockCommentService {
-      create() {
-        return Promise.reject(error);
-      }
-    }
+  let receivedError: any;
+  const next = (err: any) => {
+    receivedError = err;
+  };
 
-    const controller = new CommentController(
-      new MockCommentService() as unknown as CommentService,
-    );
+  const request = {
+    params: {},
+    body: {
+      content: "Test comment",
+    },
+    userId: "user-id",
+  } as unknown as Request;
 
-    let receivedError: any;
+  await controller.create(request, MockResponser as any, next as any);
 
-    const next = (err: any) => {
-      receivedError = err;
-    };
+  assertEquals(receivedError, missingPostIdError);
+  assertEquals(receivedError.code, 400);
+  assertEquals(receivedError.message, "Post id is required to create a comment");
+});
 
-    const request = {
-      params: {},
-      body: {
-        content: "Test comment",
-      },
-      userId: "user-id",
-    } as unknown as Request;
+Deno.test("CommentController: should call next when comment is not found", async () => {
+  const controller = new CommentController(
+    new MockCommentServiceNotFound() as unknown as CommentService,
+  );
 
-    await controller.create(
-      request,
-      MockResponser as any,
-      next as any,
-    );
+  let receivedError: any;
+  const next = (err: any) => {
+    receivedError = err;
+  };
 
-    assertEquals(receivedError, error);
-    assertEquals(receivedError.code, 400);
-    assertEquals(
-      receivedError.message,
-      "Post id is required to create a comment",
-    );
+  const request = {
+    params: {
+      id: "invalid-id",
+    },
+  } as unknown as Request;
+
+  await controller.findById(request, MockResponser as any, next as any);
+
+  assertEquals(receivedError, commentNotFoundError);
+  assertEquals(receivedError.code, 404);
+  assertEquals(receivedError.message, "Comment not found");
+});
+
+Deno.test("CommentController: should call next when user is not comment owner", async () => {
+  const controller = new CommentController(
+    new MockCommentServiceForbidden() as unknown as CommentService,
+  );
+
+  let receivedError: any;
+  const next = (err: any) => {
+    receivedError = err;
+  };
+
+  const request = {
+    params: {
+      id: "comment-id",
+    },
+    body: {
+      content: "Trying to update someone else's comment",
+    },
+    userId: "other-user-id",
+  } as unknown as Request;
+
+  await controller.update(request, MockResponser as any, next as any);
+
+  assertEquals(receivedError, commentForbiddenError);
+  assertEquals(receivedError.code, 403);
+  assertEquals(receivedError.message, "You can only change your own comments");
 });
