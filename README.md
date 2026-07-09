@@ -341,4 +341,4 @@ Se uma das operações falhar, a transação é abortada.
 
 A documentação da API está disponível no Postman:
 
-- [Postman Docs](https://documenter.getpostman.com/view/15673067/2sBY4JxiEw)
+- [Postman Docs](https://documenter.getpostman.com/view/56388802/2sBY4LQgdj)
