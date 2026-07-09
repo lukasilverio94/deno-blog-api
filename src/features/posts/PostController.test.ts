@@ -5,16 +5,20 @@ import { Request } from "express";
 import { PostController } from "./PostController.ts";
 import { PostService } from "./PostService.ts";
 import {
+  failingRules,
+  mockPost,
   MockPostService,
   MockPostServiceForbidden,
   MockPostServiceNotFound,
-  mockPost,
+  passingRules,
   postForbiddenError,
   postNotFoundError,
+  postValidationError,
 } from "./__mocks__/PostControllerMocks.ts";
 
 const postController = new PostController(
   new MockPostService() as unknown as PostService,
+  passingRules as any,
 );
 
 Deno.test("PostController: should create a post", async () => {
@@ -52,7 +56,7 @@ Deno.test("PostController: should show a post", async () => {
     MockNextFunction as any,
   ) as any;
 
-  assertEquals(result.message, "");
+  assertEquals(result.message, "Post found");
   assertEquals(result.data.post._id, mockPost._id);
 });
 
@@ -111,6 +115,7 @@ Deno.test("PostController: should delete a post", async () => {
 Deno.test("PostController: should call next when post is not found", async () => {
   const controller = new PostController(
     new MockPostServiceNotFound() as unknown as PostService,
+    passingRules as any,
   );
 
   let receivedError: any;
@@ -134,6 +139,7 @@ Deno.test("PostController: should call next when post is not found", async () =>
 Deno.test("PostController: should call next when user is not post owner", async () => {
   const controller = new PostController(
     new MockPostServiceForbidden() as unknown as PostService,
+    passingRules as any,
   );
 
   let receivedError: any;
@@ -156,4 +162,28 @@ Deno.test("PostController: should call next when user is not post owner", async 
   assertEquals(receivedError, postForbiddenError);
   assertEquals(receivedError.code, 403);
   assertEquals(receivedError.message, "You can only change your own posts");
+});
+
+Deno.test("PostController: should call next when request validation fails", async () => {
+  const controller = new PostController(
+    new MockPostService() as unknown as PostService,
+    failingRules as any,
+  );
+
+  let receivedError: any;
+  const next = (err: any) => {
+    receivedError = err;
+  };
+
+  const request = {
+    params: {
+      id: "invalid-id",
+    },
+  } as unknown as Request;
+
+  await controller.findById(request, MockResponser as any, next as any);
+
+  assertEquals(receivedError, postValidationError);
+  assertEquals(receivedError.code, 400);
+  assertEquals(receivedError.message, "Invalid post request");
 });

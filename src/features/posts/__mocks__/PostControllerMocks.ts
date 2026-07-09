@@ -32,6 +32,23 @@ export const postForbiddenError = throwlhos.err_forbidden(
   },
 );
 
+export const postValidationError = throwlhos.err_badRequest(
+  "Invalid post request",
+  {
+    id: "invalid-id",
+  },
+);
+
+export const passingRules = {
+  validate() {},
+};
+
+export const failingRules = {
+  validate() {
+    throw postValidationError;
+  },
+};
+
 export class MockPostService {
   create() {
     return Promise.resolve(mockPost);

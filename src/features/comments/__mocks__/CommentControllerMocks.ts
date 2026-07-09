@@ -30,9 +30,12 @@ export const missingPostIdError = throwlhos.err_badRequest(
   "Post id is required to create a comment",
 );
 
-export const commentNotFoundError = throwlhos.err_notFound("Comment not found", {
-  commentId: "invalid-id",
-});
+export const commentNotFoundError = throwlhos.err_notFound(
+  "Comment not found",
+  {
+    commentId: "invalid-id",
+  },
+);
 
 export const commentForbiddenError = throwlhos.err_forbidden(
   "You can only change your own comments",
@@ -41,6 +44,23 @@ export const commentForbiddenError = throwlhos.err_forbidden(
     userId: "other-user-id",
   },
 );
+
+export const commentValidationError = throwlhos.err_badRequest(
+  "Invalid comment request",
+  {
+    id: "invalid-id",
+  },
+);
+
+export const passingRules = {
+  validate() {},
+};
+
+export const failingRules = {
+  validate() {
+    throw commentValidationError;
+  },
+};
 
 export class MockCommentService {
   create() {
