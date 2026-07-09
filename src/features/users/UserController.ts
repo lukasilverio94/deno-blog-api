@@ -35,7 +35,12 @@ export class UserController {
         try {
             const { id } = req.params as { id: string };
             const user = (await this.userService.updateById(id, req.body ));
-            return res.send_noContent("User updated successfully", { userId: user._id});
+            const updatedFields = Object.keys(req.body);
+            return res.send_ok("User updated successfully", {
+                user,
+                updatedFields,
+                updatedFieldsCount: updatedFields.length,
+            });
         } catch (error) {
             next(error);
         }
@@ -44,8 +49,8 @@ export class UserController {
     delete = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const { id } = req.params as { id: string };
-            await this.userService.delete(id);
-            return res.send_noContent('User deleted successfully', { userId: id});
+            const user = await this.userService.delete(id);
+            return res.send_ok('User deleted successfully', { user });
         } catch (error) {
             next(error);
         }

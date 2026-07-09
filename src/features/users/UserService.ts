@@ -36,7 +36,7 @@ export class UserService {
         if (!user) {
             throw throwlhos.err_notFound("User not found", { userId: id });
         }
-        return user;
+        return user.toObject();
     }
 
     async delete(id: string) {
@@ -45,5 +45,6 @@ export class UserService {
             throw throwlhos.err_notFound("User not found", { userId: id });
         }
         await this.userRepository.delete(id);
+        return user.toObject();
     }
 }

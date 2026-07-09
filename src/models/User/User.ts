@@ -1,6 +1,13 @@
 import { IUser } from "./IUser.ts";
 import mongoose, { Schema } from "npm:mongoose@latest";
 
+// Applied on toJSON/toObject so API responses never expose private fields during serialization
+const removePrivateFields = (_doc: unknown, ret: Record<string, unknown>) => {
+    delete ret.password;
+    delete ret.__v;
+    return ret;
+};
+
 export class User implements IUser {
     username: IUser["username"];
     bio: IUser["bio"];
@@ -47,6 +54,12 @@ const userSchema = new Schema<IUser>({
     }
 }, {
     timestamps: true,
+    toJSON: {
+        transform: removePrivateFields,
+    },
+    toObject: {
+        transform: removePrivateFields,
+    },
 });
 
 userSchema.loadClass(User);
