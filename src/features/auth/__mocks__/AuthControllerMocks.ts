@@ -3,7 +3,7 @@ import { throwlhos } from "../../../globals/Throwlhos.ts";
 export const mockRegisterResponse = {
   token: "register-token",
   user: {
-    _id: "user-id",
+    id: "user-id",
     username: "lucas",
   },
 };
@@ -11,7 +11,7 @@ export const mockRegisterResponse = {
 export const mockLoginResponse = {
   token: "login-token",
   user: {
-    userId: "user-id",
+    id: "user-id",
     username: "lucas",
   },
 };

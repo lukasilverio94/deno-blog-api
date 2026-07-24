@@ -10,6 +10,7 @@
     "npm:@types/morgan@*": "1.9.10",
     "npm:bcrypt@*": "6.0.0",
     "npm:bcrypt@6": "6.0.0",
+    "npm:cookie-parser@^1.4.7": "1.4.7",
     "npm:cors@^2.8.6": "2.8.6",
     "npm:express@*": "5.2.1",
     "npm:express@4.18.2": "4.18.2",
@@ -225,6 +226,13 @@
     },
     "content-type@2.0.0": {
       "integrity": "sha512-j/O/d7GcZCyNl7/hwZAb606rzqkyvaDctLmckbxLzHvFBzTJHuGEdodATcP3yIRoDrLHkIATJuvzbFlp/ki2cQ=="
+    },
+    "cookie-parser@1.4.7": {
+      "integrity": "sha512-nGUvgXnotP3BsjiLX2ypbQnWoGUPIIfHQNZkkC668ntrzGWEZVW70HDEB1qnNGMicPje6EttlIgzo51YSwNQGw==",
+      "dependencies": [
+        "cookie@0.7.2",
+        "cookie-signature@1.0.6"
+      ]
     },
     "cookie-signature@1.0.6": {
       "integrity": "sha512-QADzlaHc8icV8I7vbaJXJwod9HWYp8uCqf1xa4OfNu1T7JVxQIrUgOWtHdNDtPiywmFbiS12VjotIXLrKM3orQ=="
@@ -921,6 +929,8 @@
       "jsr:@std/assert@1",
       "jsr:@zarco/isness@~0.1.18",
       "npm:bcrypt@6",
+      "npm:cookie-parser@^1.4.7",
+      "npm:cors@^2.8.6",
       "npm:express@^5.2.1",
       "npm:jsonwebtoken@^9.0.3",
       "npm:mongoose@^9.7.3",
@@ -928,11 +938,6 @@
       "npm:request-check@1.6.2",
       "npm:responser@^2.0.2",
       "npm:throwlhos@1.1.0"
-    ],
-    "packageJson": {
-      "dependencies": [
-        "npm:cors@^2.8.6"
-      ]
-    }
+    ]
   }
 }

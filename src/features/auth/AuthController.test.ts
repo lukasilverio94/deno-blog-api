@@ -5,13 +5,13 @@ import { Request } from "express";
 import { AuthController } from "./AuthController.ts";
 import { AuthService } from "./AuthService.ts";
 import {
+  authValidationError,
+  failingRules,
+  invalidCredentialsError,
   MockAuthService,
   MockAuthServiceInvalidCredentials,
   MockAuthServiceUsernameConflict,
   MockAuthServiceValidation,
-  authValidationError,
-  failingRules,
-  invalidCredentialsError,
   passingRules,
   usernameConflictError,
 } from "./__mocks__/AuthControllerMocks.ts";
@@ -39,7 +39,7 @@ Deno.test("AuthController: should register a user", async () => {
 
   assertEquals(result.code, 201);
   assertEquals(result.message, "Registered sucessfuly");
-  assertEquals(result.data.token, "register-token");
+  assertEquals(result.data.user.id, "user-id");
 });
 
 Deno.test("AuthController: should login a user", async () => {
@@ -58,8 +58,7 @@ Deno.test("AuthController: should login a user", async () => {
 
   assertEquals(result.code, 200);
   assertEquals(result.message, "Login successful");
-  assertEquals(result.data.token, "login-token");
-  assertEquals(result.data.user.userId, "user-id");
+  assertEquals(result.data.user.id, "user-id");
 });
 
 Deno.test("AuthController: should call next when login credentials are invalid", async () => {

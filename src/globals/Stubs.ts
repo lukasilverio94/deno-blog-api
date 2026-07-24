@@ -1,6 +1,9 @@
 import { Response } from "express";
 
   export const MockResponser = {
+    cookie: () => undefined,
+    clearCookie: () => undefined,
+    
     send_ok: (message: string, data?: unknown) => ({
       success: true,
       message,

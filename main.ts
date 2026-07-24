@@ -2,7 +2,8 @@
 import express from "express";
 // @deno-types='npm:@types/morgan'
 import morgan from "morgan";
-import cors from 'cors';
+import cors from "cors";
+import cookieParser from "cookie-parser";
 import { connectMongoDB } from "./src/config/db.ts";
 import { UserRouter } from "./src/features/users/UserRoutes.ts";
 import responser from "responser";
@@ -13,18 +14,19 @@ import { errorHandler } from "./src/middlewares/Error.ts";
 
 const app = express();
 const corsOptions = {
-  origin:  Deno.env.get("BASE_CLIENT_URL"), 
-  credentials: true,            
-  optionsSuccessStatus: 200    
-}
+  origin: Deno.env.get("BASE_CLIENT_URL"),
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
 
 const PORT = Number(Deno.env.get("PORT")) || 3000;
 
 await connectMongoDB();
 
 app.use(cors(corsOptions));
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 app.use(express.json());
+app.use(cookieParser());
 app.use(responser.default);
 
 app.use(UserRouter);
